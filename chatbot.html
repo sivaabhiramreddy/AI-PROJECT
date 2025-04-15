@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BookWeb</title>
+  <link rel="stylesheet" href="home-page.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-bar {
+      background: #333;
+      padding: 10px 0;
+    }
+
+    .nav-bar ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-bar li {
+      margin: 0 20px;
+      position: relative;
+    }
+
+    .nav-bar a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #444;
+      z-index: 1;
+      border-radius: 5px;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown-content a {
+      display: block;
+      color: white;
+      padding: 10px;
+      text-decoration: none;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #7f00ff, #e100ff);
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    footer {
+      text-align: center;
+      background: #333;
+      color: white;
+      padding: 20px;
+    }
+
+    /* Chatbot Styles */
+    #chatbot {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 400px;
+      height: 100%;
+      background: #ffffff;
+      border-left: 3px solid #6200ea;
+      box-shadow: -3px 0 15px rgba(0, 0, 0, 0.1);
+      font-size: 15px;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    #chatbot.hidden {
+      transform: translateX(100%);
+    }
+
+    #chatbot-header {
+      background: #6200ea;
+      color: white;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+      position: relative;
+    }
+
+    #chatbot-body {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+      font-size: 15px;
+    }
+
+    #chatbot-output p {
+      margin-bottom: 10px;
+    }
+
+    #user-input {
+      padding: 14px;
+      border: none;
+      border-top: 1px solid #ccc;
+      font-size: 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Toggle button */
+    #toggle-chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 420px;
+      background: #6200ea;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 15px;
+      z-index: 1001;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about-us.html">About</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropbtn">Genre</a>
+        <div class="dropdown-content">
+          <a href="fantasy.html">Fantasy</a>
+          <a href="lifevalue.html">Life Values</a>
+          <a href="action.html">Action</a>
+          <a href="adventure.html">Adventure</a>
+          <a href="mystery.html">Mystery</a>
+          <a href="romance.html">Romance</a>
+          <a href="scifi.html">Science Fiction</a>
+          <a href="historical.html">Historical</a>
+        </div>
+      </li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+
+  <div class="hero">
+    <h1>Welcome to BookWeb!</h1>
+    <p>Discover your next favorite read among hundreds of recommended titles.</p>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 BookWeb. All rights reserved.</p>
+  </footer>
+
+  <button id="toggle-chatbot">Chat 💬</button>
+
+  <div id="chatbot" class="hidden">
+    <div id="chatbot-header">📚 BookWeb Chatbot</div>
+    <div id="chatbot-body">
+      <p id="chatbot-output"></p>
+    </div>
+    <input type="text" id="user-input" placeholder="Type your message..." />
+  </div>
+
+  <script>
+    const chatbot = {
+      greeting: "Hi there! 👋 I'm your BookNest assistant. What would you like to do today?",
+      options: [
+        "1. 📖 Get book recommendations",
+        "2. 🔎 Explore genres",
+        "3. 🧭 Navigate to a page",
+        "4. ❓ Ask a question",
+        "5. 👋 Exit"
+      ],
+      recommendations: {
+        fantasy: [
+          "✨ Sword Catcher by Cassandra Clare",
+          "🦄 The First Bright Thing by J.R. Dawson",
+          "🔥 Fall of Ruin and Wrath by Jennifer L. Armentrout"
+        ],
+        action: [
+          "🎯 Empire of Lies by Raymond Khoury",
+          "⚔️ Bravely by Maggie Stiefvater",
+          "🕶️ Hour Of the Assassin by Matthew Quirk"
+        ],
+        adventure: [
+          "🏔️ The Hobbit by J.R.R. Tolkien",
+          "🏴‍☠️ Treasure Island by Robert Louis Stevenson",
+          "🐺 The Call of the Wild by Jack London"
+        ],
+        mystery: [
+          "🕵️‍♂️ The Adventures of Sherlock Holmes by Arthur Conan Doyle",
+          "🚂 Murder on the Orient Express by Agatha Christie",
+          "🧠 Gone Girl by Gillian Flynn"
+        ],
+        romance: [
+          "💖 The Notebook by Nicholas Sparks",
+          "🌹 Me Before You by Jojo Moyes",
+          "💌 It Ends With Us by Colleen Hoover"
+        ],
+        scifi: [
+          "🚀 Dune by Frank Herbert",
+          "🌌 Ender's Game by Orson Scott Card",
+          "🤖 Neuromancer by William Gibson"
+        ],
+        historical: [
+          "🏰 The Book Thief by Markus Zusak",
+          "🕰️ All the Light We Cannot See by Anthony Doerr",
+          "👒 The Help by Kathryn Stockett"
+        ]
+      },
+      genres: ["Fantasy", "Action", "Adventure", "Mystery", "Romance", "Science Fiction", "Historical"],
+      navigate: {
+        home: "Return to the Home page [index.html]",
+        about: "Learn more on the About page [about-us.html]",
+        contact: "Contact us through the footer section of the Home page."
+      },
+      exitMessage: "Thanks for chatting with me! Happy reading! 📚✨"
+    };
+
+    function startChatbot() {
+      const output = document.getElementById("chatbot-output");
+      output.innerHTML = `<strong>${chatbot.greeting}</strong><br>${chatbot.options.join("<br>")}`;
+    }
+
+    document.getElementById("user-input").addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        const input = this.value.toLowerCase().trim();
+        handleUserInput(input);
+        this.value = "";
+      }
+    });
+
+    function handleUserInput(input) {
+      const output = document.getElementById("chatbot-output");
+      let response = "";
+
+      switch (input) {
+        case "1":
+          response = "Great! Which genre are you interested in? (fantasy, action, adventure, mystery, romance, scifi, historical)";
+          break;
+        case "fantasy":
+        case "action":
+        case "adventure":
+        case "mystery":
+        case "romance":
+        case "scifi":
+        case "historical":
+          response = `<strong>📚 Recommended ${input.charAt(0).toUpperCase() + input.slice(1)} books:</strong><br>${chatbot.recommendations[input].join("<br>")}`;
+          break;
+        case "2":
+          response = "Here are the available genres: " + chatbot.genres.join(", ");
+          break;
+        case "3":
+          response = "Which page would you like to go to? (home, about, contact)";
+          break;
+        case "home":
+        case "about":
+        case "contact":
+          response = chatbot.navigate[input];
+          break;
+        case "4":
+          response = "Sure! Ask me anything about books or the website.";
+          break;
+        case "5":
+          response = chatbot.exitMessage;
+          break;
+        default:
+          response = "Sorry, I didn't understand that. Please choose an option from the list above.";
+      }
+
+      output.innerHTML += `<br><br>${response}`;
+      document.getElementById("chatbot-body").scrollTop = document.getElementById("chatbot-body").scrollHeight;
+    }
+
+    window.onload = startChatbot;
+
+    document.getElementById("toggle-chatbot").addEventListener("click", function () {
+      document.getElementById("chatbot").classList.toggle("hidden");
+    });
+  </script>
+</body>
+</html>
