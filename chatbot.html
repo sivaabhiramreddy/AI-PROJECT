@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BookWeb</title>
-  <link rel="stylesheet" href="home-page.css" />
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -80,7 +79,6 @@
       background: #ffffff;
       border-left: 3px solid #6200ea;
       box-shadow: -3px 0 15px rgba(0, 0, 0, 0.1);
-      font-size: 15px;
       display: flex;
       flex-direction: column;
       z-index: 1000;
@@ -98,7 +96,6 @@
       font-weight: bold;
       font-size: 18px;
       text-align: center;
-      position: relative;
     }
 
     #chatbot-body {
@@ -109,9 +106,19 @@
       font-size: 15px;
     }
 
-    #chatbot-output p {
-      margin-bottom: 10px;
+    #chatbot-output p, .book {
+      margin-bottom: 15px;
     }
+
+    .book img {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
     #user-input {
       padding: 14px;
@@ -122,7 +129,6 @@
       box-sizing: border-box;
     }
 
-    /* Toggle button */
     #toggle-chatbot {
       position: fixed;
       bottom: 20px;
@@ -175,123 +181,142 @@
   <div id="chatbot" class="hidden">
     <div id="chatbot-header">📚 BookWeb Chatbot</div>
     <div id="chatbot-body">
-      <p id="chatbot-output"></p>
+      <div id="chatbot-output">
+        <p><strong>Say hi to start chatting! 👋</strong></p>
+      </div>
     </div>
     <input type="text" id="user-input" placeholder="Type your message..." />
   </div>
 
   <script>
-    const chatbot = {
-      greeting: "Hi there! 👋 I'm your BookNest assistant. What would you like to do today?",
-      options: [
-        "1. 📖 Get book recommendations",
-        "2. 🔎 Explore genres",
-        "3. 🧭 Navigate to a page",
-        "4. ❓ Ask a question",
-        "5. 👋 Exit"
+    const chatbotOutput = document.getElementById("chatbot-output");
+    const chatbotBody = document.getElementById("chatbot-body");
+
+    const bookRecommendations = {
+      fantasy: [
+        {
+          title: "✨ Sword Catcher by Cassandra Clare",
+          image: "https://m.media-amazon.com/images/I/91XWM5c5d2L.jpg"
+        },
+        {
+          title: "🦄 The First Bright Thing by J.R. Dawson",
+          image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1663955369l/61884813.jpg"
+        }
       ],
-      recommendations: {
-        fantasy: [
-          "✨ Sword Catcher by Cassandra Clare",
-          "🦄 The First Bright Thing by J.R. Dawson",
-          "🔥 Fall of Ruin and Wrath by Jennifer L. Armentrout"
-        ],
-        action: [
-          "🎯 Empire of Lies by Raymond Khoury",
-          "⚔️ Bravely by Maggie Stiefvater",
-          "🕶️ Hour Of the Assassin by Matthew Quirk"
-        ],
-        adventure: [
-          "🏔️ The Hobbit by J.R.R. Tolkien",
-          "🏴‍☠️ Treasure Island by Robert Louis Stevenson",
-          "🐺 The Call of the Wild by Jack London"
-        ],
-        mystery: [
-          "🕵️‍♂️ The Adventures of Sherlock Holmes by Arthur Conan Doyle",
-          "🚂 Murder on the Orient Express by Agatha Christie",
-          "🧠 Gone Girl by Gillian Flynn"
-        ],
-        romance: [
-          "💖 The Notebook by Nicholas Sparks",
-          "🌹 Me Before You by Jojo Moyes",
-          "💌 It Ends With Us by Colleen Hoover"
-        ],
-        scifi: [
-          "🚀 Dune by Frank Herbert",
-          "🌌 Ender's Game by Orson Scott Card",
-          "🤖 Neuromancer by William Gibson"
-        ],
-        historical: [
-          "🏰 The Book Thief by Markus Zusak",
-          "🕰️ All the Light We Cannot See by Anthony Doerr",
-          "👒 The Help by Kathryn Stockett"
-        ]
-      },
-      genres: ["Fantasy", "Action", "Adventure", "Mystery", "Romance", "Science Fiction", "Historical"],
-      navigate: {
-        home: "Return to the Home page [index.html]",
-        about: "Learn more on the About page [about-us.html]",
-        contact: "Contact us through the footer section of the Home page."
-      },
-      exitMessage: "Thanks for chatting with me! Happy reading! 📚✨"
+      action: [
+        {
+          title: "Empire of Lies by Raymond Khoury",
+          image: "https://m.media-amazon.com/images/I/91OnS856KGL._AC_UF1000,1000_QL80_.jpg"
+        },
+        {
+          title: "Bravely by Maggie Stiefvater",
+          image: "https://m.media-amazon.com/images/I/81oXptbnZ6L._UF1000,1000_QL80_.jpg"
+        }
+      ],
+      adventure: [
+        {
+          title: "The Hobbit by J.R.R. Tolkien",
+          image: "https://m.media-amazon.com/images/I/712cDO7d73L._AC_UF1000,1000_QL80_.jpg"
+        },
+        {
+          title: "Treasure Island by R.L. Stevenson",
+          image: "https://m.media-amazon.com/images/I/71fi+jN6QpS._UF1000,1000_QL80_.jpg"
+        }
+      ],
+      scifi: [
+        {
+          title: "Dune by Frank Herbert",
+          image: "https://m.media-amazon.com/images/I/913padSawdL.jpg"
+        },
+        {
+          title: "Ender’s Game by Orson Scott Card",
+          image: "https://m.media-amazon.com/images/I/91T-14y8aTL._AC_UF1000,1000_QL80_.jpg"
+        }
+      ],
+      lifevalue: [
+        {
+          title: "Atomic Habits by James Clear",
+          image: "https://m.media-amazon.com/images/I/81F90H7hnML.jpg"
+        },
+        {
+          title: "The Alchemist by Paulo Coelho",
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxOCpQY4ZhlrhLKVpjTKJ0cAc-CD1ETru1Ug&s"
+        }
+      ],
+      historical: [
+        {
+          title: "The Book Thief by Markus Zusak",
+          image: "https://m.media-amazon.com/images/I/71H52+sSb4L._AC_UF1000,1000_QL80_.jpg"
+        },
+        {
+          title: "Wolf Hall by Hilary Mantel",
+          image: "https://m.media-amazon.com/images/I/715MYJy6kjL._AC_UF1000,1000_QL80_.jpg"
+        }
+      ],
+      mystery: [
+        {
+          title: "🕵️‍♂️ The Adventures of Sherlock Holmes by Arthur Conan Doyle",
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhdb44SsXIG_2dvASC1q0tQOyht-q6cMUyJQ&s"
+        },
+        {
+          title: "🚂 Murder on the Orient Express by Agatha Christie",
+          image: "https://m.media-amazon.com/images/I/71QZPV2T4tL._AC_UF1000,1000_QL80_.jpg"
+        }
+      ],
+      romance: [
+        {
+          title: "💖 The Notebook by Nicholas Sparks",
+          image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1483183484i/33648131.jpg"
+        },
+        {
+          title: "🌹 Me Before You by Jojo Moyes",
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDksCMFixhKLMsbgx-Iwlacv5HHCpGvEx5UA&s"
+        }
+      ]
     };
 
-    function startChatbot() {
-      const output = document.getElementById("chatbot-output");
-      output.innerHTML = `<strong>${chatbot.greeting}</strong><br>${chatbot.options.join("<br>")}`;
+    let greeted = false;
+
+    function appendMessage(content) {
+      chatbotOutput.innerHTML += `<p>${content}</p>`;
+      chatbotBody.scrollTop = chatbotBody.scrollHeight;
     }
 
-    document.getElementById("user-input").addEventListener("keypress", function (event) {
-      if (event.key === "Enter") {
+    function showBooks(genre) {
+      if (bookRecommendations[genre]) {
+        bookRecommendations[genre].forEach(book => {
+          chatbotOutput.innerHTML += `
+            <div class="book">
+              <img src="${book.image}" alt="${book.title}" />
+              <p>${book.title}</p>
+            </div>
+          `;
+        });
+      } else {
+        appendMessage("Sorry, I don't have books in that genre yet.");
+      }
+    }
+
+    document.getElementById("user-input").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
         const input = this.value.toLowerCase().trim();
-        handleUserInput(input);
         this.value = "";
+
+        if (!greeted && (input === "hi" || input === "hello" || input === "hey")) {
+          greeted = true;
+          appendMessage("Hi there! 😊 Welcome to BookWeb. What genre of books are you interested in? (e.g., fantasy, mystery, romance,action, adventure, lifevalue, historical, scifi)");
+        } else if (greeted) {
+          if (bookRecommendations[input]) {
+            appendMessage(`Here are some top ${input} book recommendations:`);
+            showBooks(input);
+          } else {
+            appendMessage("I'm not sure about that genre. Try one like 'fantasy', 'mystery', 'romance'.");
+          }
+        } else {
+          appendMessage("Say 'Hi' to get started! 👋");
+        }
       }
     });
-
-    function handleUserInput(input) {
-      const output = document.getElementById("chatbot-output");
-      let response = "";
-
-      switch (input) {
-        case "1":
-          response = "Great! Which genre are you interested in? (fantasy, action, adventure, mystery, romance, scifi, historical)";
-          break;
-        case "fantasy":
-        case "action":
-        case "adventure":
-        case "mystery":
-        case "romance":
-        case "scifi":
-        case "historical":
-          response = `<strong>📚 Recommended ${input.charAt(0).toUpperCase() + input.slice(1)} books:</strong><br>${chatbot.recommendations[input].join("<br>")}`;
-          break;
-        case "2":
-          response = "Here are the available genres: " + chatbot.genres.join(", ");
-          break;
-        case "3":
-          response = "Which page would you like to go to? (home, about, contact)";
-          break;
-        case "home":
-        case "about":
-        case "contact":
-          response = chatbot.navigate[input];
-          break;
-        case "4":
-          response = "Sure! Ask me anything about books or the website.";
-          break;
-        case "5":
-          response = chatbot.exitMessage;
-          break;
-        default:
-          response = "Sorry, I didn't understand that. Please choose an option from the list above.";
-      }
-
-      output.innerHTML += `<br><br>${response}`;
-      document.getElementById("chatbot-body").scrollTop = document.getElementById("chatbot-body").scrollHeight;
-    }
-
-    window.onload = startChatbot;
 
     document.getElementById("toggle-chatbot").addEventListener("click", function () {
       document.getElementById("chatbot").classList.toggle("hidden");
